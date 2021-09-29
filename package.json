@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/juandatorr1999/AlcanciaBackEnd#readme",
   "dependencies": {
+    "@anchor-protocol/anchor-earn": "^1.0.4",
     "express": "^4.17.1",
     "firebase-admin": "^9.12.0"
   },

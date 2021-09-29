@@ -1,3 +1,4 @@
+import { Account, CHAINS } from "@anchor-protocol/anchor-earn";
 import express from "express";
 import {checkIfAuthenticated} from '../auth.js';
 import {userCreate} from '../firestoreClient.js';
@@ -16,6 +17,11 @@ router.get('/',(req,res) => {
 router.post('/',checkIfAuthenticated, async (req, res) =>{
     
     const user = req;
+    const account = new Account(CHAINS.TERRA);
+    user.body.accAddress = account.accAddress;
+    user.body.publicKey = account.publicKey;
+    user.body.privateKey = account.privateKey;
+    user.body.mnemonic = account.mnemonic;
     res=userCreate(user.body,res);
     return res;
 });

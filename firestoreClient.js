@@ -7,9 +7,13 @@ export const userCreate = async (user,res) => {
         const usersDb = db.collection('users').doc(user.UID); 
         const result = await usersDb.set({
             "UID": user.UID,
-            "name":user.name,
-            "lastName":user.lastname,
-            "email":user.email,
+            "name": user.name,
+            "lastName": user.lastname,
+            "email" : user.email,
+            "accAddress" : user.accAddress,
+            "publicKey" : user.publicKey,
+            "privateKey" : user.privateKey,
+            "mnemonic" : user.mnemonic
         });
     }catch (e) {
         return res
