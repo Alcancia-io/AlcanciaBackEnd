@@ -6,6 +6,11 @@
 
 3. ```npm install```
 
-4. ```npm start```
+4. create a .env file containing the followin variables
 
-5. http://localhost:8000/users
+    ```PORT = 8000
+       SERVICEKEY = <Path to firebase servicekey>
+
+5. ```npm start```
+
+6. http://localhost:8000/users
