@@ -20,6 +20,9 @@ package-lock.json
 *.gz
 
 
+#enviroments
+*.env
+
 # Coveralls
 coverage
 

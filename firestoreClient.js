@@ -25,3 +25,26 @@ export const userCreate = async (user,res) => {
         .status(201)
         .send(user);
 };
+
+export const userDetail = async (user,res) => {
+    try {
+        const userdetail = db.collection('users').doc(`${user.UID}`);
+        const doc = await userdetail.get();
+        if (!doc.exists) {
+        console.log('No such document!');
+        } else {
+        user.name = doc.data().name;
+        user.lastName = doc.data().lastName;
+        user.email = doc.data().email;
+        }
+        
+    }catch (e) {
+        return res
+        .status(401)
+        .send({ error: "Error while retriving user" });
+    }
+    return res
+        .status(201)
+        .send(user);
+    
+};

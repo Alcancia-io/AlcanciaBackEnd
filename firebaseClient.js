@@ -1,8 +1,9 @@
-
 import admin from 'firebase-admin';
+import dotenv from "dotenv";
 
+dotenv.config();
 
 admin.initializeApp({
-    credential: admin.credential.cert('../coin-test-6f419-firebase-adminsdk-a79n1-057635f522.json')
+    credential: admin.credential.cert(process.env.SERVICEKEY)
   });
 export default admin;
