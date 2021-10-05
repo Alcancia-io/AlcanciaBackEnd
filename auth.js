@@ -23,7 +23,7 @@ export const checkIfAuthenticated = (req, res, next) => {
         } catch (e) {
             return res
             .status(401)
-            .send({ error: "Not a valid user" });
+            .send({ error: e });
         }
     });
 };

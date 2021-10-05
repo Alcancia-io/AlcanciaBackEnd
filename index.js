@@ -2,13 +2,14 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import usersRoutes from './routes/users.js';
 import dotenv from "dotenv";
+import cors from 'cors';
 
 dotenv.config();
 const app = express();
 
 
 //middleware
-
+app.use(cors());
 app.use(bodyParser.urlencoded({
     extended: true
   }));
