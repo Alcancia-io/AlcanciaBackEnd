@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import usersRoutes from './routes/users.js';
 import dotenv from "dotenv";
 import cors from 'cors';
-import createOrder from './paypalClient.js';
+import {createOrder,executeOrder} from './paypalClient.js';
 
 dotenv.config();
 const app = express();
@@ -24,13 +24,14 @@ app.get('/',(req,res) => {
 
 app.get('/create-order',async (req,res) =>{
     var result=await createOrder();
-    //console.log(result);
     res.send(result);
 });
 
-app.get('/execute-order',(req,res)=>{
+app.get('/execute-order',async (req,res)=>{
     console.log(req.query);
-    res.send('hi');
+    //recive token and PayerID and execute the order
+    var result=await executeOrder(req.query.token,req.query.PayerID);
+    res.send('order exectued');
 });
 
 app.get('/cancel-order',(req,res)=>{
