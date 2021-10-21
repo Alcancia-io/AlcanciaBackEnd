@@ -23,6 +23,7 @@ app.get('/',(req,res) => {
 });
 
 app.get('/create-order',async (req,res) =>{
+    
     var result=await createOrder();
     res.send(result);
 });
@@ -31,6 +32,7 @@ app.get('/execute-order',async (req,res)=>{
     console.log(req.query);
     //recive token and PayerID and execute the order
     var result=await executeOrder(req.query.token,req.query.PayerID);
+    //insert transaction into firestore
     res.send('order exectued');
 });
 
