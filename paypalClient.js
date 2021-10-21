@@ -42,8 +42,8 @@ export async function createOrder(){
       brand_name: 'Alcancia',
       landing_page: 'NO_PREFERENCE',
       user_action: 'PAY_NOW',
-      return_url: process.env.Client.Host+'/execute-order',
-      cancel_url: process.env.Client.Host+'/cancel-order'
+      return_url: process.env.Host+'/execute-order',
+      cancel_url: process.env.Host+'/cancel-order'
     }
   };
 
