@@ -21,7 +21,6 @@ var getPaypalToken = async function (){
       },
     });
     return access_token;
-    console.log(access_token);
   } catch (e) {
     console.error(e);
   }
@@ -29,21 +28,21 @@ var getPaypalToken = async function (){
 
 var token=await getPaypalToken();
 
-export async function createOrder(){
+export async function createOrder(usdAmount,uid){
   const body = {
     intent: 'CAPTURE',
     purchase_units: [{
       amount: {
         currency_code: 'USD',
-        value: '100'
+        value: usdAmount
       }
     }],
     application_context: {
       brand_name: 'Alcancia',
       landing_page: 'NO_PREFERENCE',
       user_action: 'PAY_NOW',
-      return_url: process.env.Host+'/execute-order',
-      cancel_url: process.env.Host+'/cancel-order'
+      return_url: 'https://alcancia.io/main-screen',
+      cancel_url: 'https://alcancia.io/main-screen'
     }
   };
 
@@ -74,24 +73,7 @@ export async function createOrder(){
   return result;
 }
 
-export async function executeOrder(tokenOrder,PayerID){
-  const body = {
-    intent: 'CAPTURE',
-    purchase_units: [{
-      amount: {
-        currency_code: 'USD',
-        value: '100'
-      }
-    }],
-    application_context: {
-      brand_name: 'Alcancia',
-      landing_page: 'NO_PREFERENCE',
-      user_action: 'PAY_NOW',
-      return_url: 'http://localhost:8000/execute-order',
-      cancel_url: 'http://localhost:8000/cancel-order'
-    }
-  };
-
+export async function executeOrder(tokenOrder){
   let result;
   try{
     await axios({
@@ -102,10 +84,15 @@ export async function executeOrder(tokenOrder,PayerID){
         Accept: 'application/json',
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + token,
+        'Prefer': 'return=representation'
       }
     })
     .then(function (response){
-      result= response.data;
+      if(response.data.status=='COMPLETED'){
+        result=response.data.id;
+      }else if(response.data.status=='PAYER_ACTION_REQUIRED'){
+        result=null;
+      }
     });
   }catch(e){
     console.error(e);
@@ -113,6 +100,28 @@ export async function executeOrder(tokenOrder,PayerID){
   return result;
 }
 
+
+export async function getOrderInfo(order){
+  let result;
+  try{
+    await axios({
+      url: process.env.Paypal+'/v2/checkout/orders/'+order,
+      port: 443,
+      method: 'get',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      }
+    })
+    .then(function (response){
+      result =response.data;
+    });
+  }catch(e){
+    console.error(e);
+  }
+  return result;
+}
 
 export default createOrder;
 

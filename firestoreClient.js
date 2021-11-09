@@ -48,3 +48,19 @@ export const userDetail = async (user,res) => {
         .send(user);
     
 };
+
+export const addDeposit = async (userUID,orderId,order,res) => {
+    try {
+        const userDetail = db.collection('users').doc(`${userUID}`).collection('deposits');
+        userDetail.doc(orderId).set(order);
+        
+    }catch (e) {
+        return res
+        .status(401)
+        .send({ error: "Error while writting to database" });
+    }
+    return res
+        .status(201)
+        .send("deposit registered succesfully");
+    
+};
