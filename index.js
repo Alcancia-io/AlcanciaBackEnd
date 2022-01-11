@@ -25,7 +25,7 @@ app.get('/',(req,res) => {
     res.send('Hellow world');
 });
 
-app.get('/create-order',checkIfAuthenticated,body('usdAmount').isFloat({min:20,max:500}).notEmpty(),async (req,res) =>{
+app.post('/create-order',checkIfAuthenticated,body('usdAmount').isFloat({min:20,max:500}).notEmpty(),async (req,res) =>{
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
@@ -34,7 +34,7 @@ app.get('/create-order',checkIfAuthenticated,body('usdAmount').isFloat({min:20,m
     res.send(result);
 });
 
-app.get('/execute-order',checkIfAuthenticated,body('orderToken').notEmpty(),async (req,res)=>{
+app.post('/execute-order',checkIfAuthenticated,body('orderToken').notEmpty(),async (req,res)=>{
     console.log(req.body.orderToken);
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
