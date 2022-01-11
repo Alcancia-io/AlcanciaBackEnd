@@ -53,7 +53,7 @@ export const addDeposit = async (userUID,orderId,order,res) => {
     try {
         const userDetail = db.collection('users').doc(`${userUID}`).collection('deposits');
         userDetail.doc(orderId).set(order);
-        
+        await addPendingTransaction(userUID,orderId,order);
     }catch (e) {
         return res
         .status(401)
@@ -62,5 +62,24 @@ export const addDeposit = async (userUID,orderId,order,res) => {
     return res
         .status(201)
         .send("deposit registered succesfully");
-    
 };
+
+export const addPendingTransaction = async (userUID,orderId,order,res) => {
+    try {
+        const pendingTransaction = db.collection('pendingTransactions')
+        pendingTransaction.doc(orderId).set({
+            "date":order.create_time,
+            "UID":userUID,
+            "name":db.collection('users').doc(`${userUID}`).name+db.collection('users').doc(`${userUID}`).lastName,
+            "payer":order.payer,
+            "amount":order.purchase_units[0].amount.value,
+            "target Asset":"USDT",
+            "status":"pending",
+            "teller":"",
+            "completion_date":""
+        });
+    }catch (e) {
+        console.log(e);
+    }
+};
+

@@ -90,6 +90,8 @@ export async function executeOrder(tokenOrder){
     .then(function (response){
       if(response.data.status=='COMPLETED'){
         result=response.data.id;
+        console.log("EXECUTE ORDER");
+        console.log(response.data.id);
       }else if(response.data.status=='PAYER_ACTION_REQUIRED'){
         result=null;
       }
@@ -115,7 +117,9 @@ export async function getOrderInfo(order){
       }
     })
     .then(function (response){
-      result =response.data;
+      result = response.data;
+      console.log("EXECUTE ORDER");
+      console.log(response.data);
     });
   }catch(e){
     console.error(e);

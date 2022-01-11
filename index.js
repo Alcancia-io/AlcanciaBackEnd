@@ -6,7 +6,7 @@ import cors from 'cors';
 import { body, validationResult } from "express-validator";
 import {createOrder,executeOrder,getOrderInfo} from './paypalClient.js';
 import {checkIfAuthenticated} from './auth.js';
-import {addDeposit} from './firestoreClient.js';
+import {addDeposit,addPendingTransaction} from './firestoreClient.js';
 dotenv.config();
 const app = express();
 
@@ -41,11 +41,12 @@ app.get('/execute-order',checkIfAuthenticated,body('orderToken').notEmpty(),asyn
         return res.status(400).json({ errors: errors.array() });
     }  
     //recive token and PayerID and execute the order
-    var order=await executeOrder(req.body.orderToken);
+    var order = await executeOrder(req.body.orderToken);
     //get order details
-    var retrivedOrderInfo=await getOrderInfo(order);
+    var retrivedOrderInfo = await getOrderInfo(order);
     //insert order into firestore
     addDeposit(req.body.UID,retrivedOrderInfo.id,retrivedOrderInfo,res);
+    //addPendingTransaction(req.body.UID,retrivedOrderInfo.id,retrivedOrderInfo,res);
     //res.send('order exectued');
 });
 
