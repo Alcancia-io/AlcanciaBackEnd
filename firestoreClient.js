@@ -60,8 +60,8 @@ export const addDeposit = async (userUID,orderId,order,res) => {
         .send({ error: "Error while writting to database" });
     }
     return res
-        .status(201)
-        .send("deposit registered succesfully");
+        .status(200)
+        .send("OK");
 };
 
 export const addPendingTransaction = async (userUID,orderId,order,res) => {

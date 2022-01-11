@@ -25,12 +25,13 @@ app.get('/',(req,res) => {
     res.send('Hellow world');
 });
 
-app.post('/create-order',checkIfAuthenticated,body('usdAmount').isFloat({min:20,max:500}).notEmpty(),async (req,res) =>{
+app.post('/create-order',checkIfAuthenticated,body('amount','currency_code').isFloat({min:20,max:500}).notEmpty(),async (req,res) =>{
+    //TODO: currency code validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
     }  
-    var result=await createOrder(req.body.usdAmount,req.body.UID);
+    var result=await createOrder(req.body.amount,req.body.currency_code,req.body.UID);
     res.send(result);
 });
 

@@ -28,7 +28,7 @@ var getPaypalToken = async function (){
 
 var token=await getPaypalToken();
 
-export async function createOrder(usdAmount,uid){
+export async function createOrder(usdAmount,currency_code,uid){
   const body = {
     intent: 'CAPTURE',
     purchase_units: [{
@@ -41,8 +41,8 @@ export async function createOrder(usdAmount,uid){
       brand_name: 'Alcancia',
       landing_page: 'NO_PREFERENCE',
       user_action: 'PAY_NOW',
-      return_url: 'https://alcancia.io/main-screen',
-      cancel_url: 'https://alcancia.io/main-screen'
+      return_url: 'http://localhost:4100/paypalOrder/successfull',
+      cancel_url: 'http://localhost:4100/main-screen'
     }
   };
 
