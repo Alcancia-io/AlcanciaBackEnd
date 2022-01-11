@@ -41,8 +41,8 @@ export async function createOrder(usdAmount,currency_code,uid){
       brand_name: 'Alcancia',
       landing_page: 'NO_PREFERENCE',
       user_action: 'PAY_NOW',
-      return_url: 'http://localhost:4100/paypalOrder/successfull',
-      cancel_url: 'http://localhost:4100/main-screen'
+      return_url: 'http://localhost:8100/paypalOrder/successfull',
+      cancel_url: 'http://localhost:8100/main-screen'
     }
   };
 
@@ -62,7 +62,9 @@ export async function createOrder(usdAmount,currency_code,uid){
     .then(function (response){
       for(let i=0;i<response.data.links.length;i++){
         if(response.data.links[i].rel=='approve'){
-          result= response.data.links[i].href;
+          result= {
+            "url":response.data.links[i].href
+          }
         }
       }
       
