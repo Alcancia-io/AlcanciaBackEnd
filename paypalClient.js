@@ -35,10 +35,11 @@ export async function createOrder(usdAmount,currency_code,uid){
       amount: {
         currency_code: 'USD',
         value: usdAmount
-      }
+      },
+      description:'Alcancia services'
     }],
     application_context: {
-      brand_name: 'Alcancia',
+      brand_name: 'Alcancia.io',
       landing_page: 'NO_PREFERENCE',
       user_action: 'PAY_NOW',
       return_url: 'http://localhost:8100/paypalOrder/successfull',
@@ -67,7 +68,6 @@ export async function createOrder(usdAmount,currency_code,uid){
           }
         }
       }
-      
     });
   }catch(e){
     console.error(e);
@@ -90,10 +90,16 @@ export async function executeOrder(tokenOrder){
       }
     })
     .then(function (response){
+      for(let i=0;i<response.data.purchase_units.length;i++){
+        for(let j=0;j<response.data.purchase_units[i].payments.captures.length;j++){
+          console.log(response.data.purchase_units[i].payments.captures[j].status);
+        }
+        
+      }
       if(response.data.status=='COMPLETED'){
         result=response.data.id;
-        console.log("EXECUTE ORDER");
-        console.log(response.data.id);
+        //console.log("EXECUTE ORDER");
+        //console.log(response.data.id);
       }else if(response.data.status=='PAYER_ACTION_REQUIRED'){
         result=null;
       }
@@ -120,8 +126,8 @@ export async function getOrderInfo(order){
     })
     .then(function (response){
       result = response.data;
-      console.log("EXECUTE ORDER");
-      console.log(response.data);
+      //console.log("EXECUTE ORDER");
+      //console.log(response.data);
     });
   }catch(e){
     console.error(e);
