@@ -126,8 +126,6 @@ export async function getOrderInfo(order){
     })
     .then(function (response){
       result = response.data;
-      //console.log("EXECUTE ORDER");
-      //console.log(response.data);
     });
   }catch(e){
     console.error(e);
