@@ -1,30 +1,37 @@
-import express from 'express';
-import bodyParser from 'body-parser';
-import usersRoutes from './routes/users.js';
-import dotenv from "dotenv";
-import cors from 'cors';
-import { body, validationResult } from "express-validator";
-import {createOrder,executeOrder,getOrderInfo} from './paypalClient.js';
-import {checkIfAuthenticated} from './auth.js';
-import {addDeposit} from './firestoreClient.js';
+const express = require('express');
+const bodyParser  = require('body-parser');
+const dotenv = require('dotenv');
+const cors = require('cors');
+const validator = require('express-validator');
+const deposits = require('./routes/deposits.js');
+//const users = require('./routes/users');
+//const users = require('./routes/users.js');
+//import { body, validationResult } from "express-validator";
+//const paypal = require('./paypalClient.js');
+//import {createOrder,executeOrder,getOrderInfo} from './paypalClient.js';
+//const auth = require('./auth.js');
+//import {checkIfAuthenticated} from './auth.js';
+//const firestore = require('./firebaseClient.js');
+//import {addDeposit} from './firestoreClient.js';
+//import { apps } from 'firebase-admin';
+//const  firebase = require('firebase-admin');
 dotenv.config();
+
+//app init
 const app = express();
 
+var corsOptions = {
+    origin: 'http://localhost:8100',
+    optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
+  }
 
 //middleware
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.urlencoded({
-    extended: true
-  }));
-app.use(bodyParser.json());
-app.use('/users',usersRoutes);
+//app.use('/users',users);
+app.use('/deposits',deposits);
 
-//routes
-app.get('/',(req,res) => {
-    res.send('Hellow world');
-});
-
+/*
 app.post('/create-order',checkIfAuthenticated,body('amount','currency_code').isFloat({min:20,max:5000}).notEmpty(),async (req,res) =>{
     //TODO: currency code validation
     const errors = validationResult(req);
@@ -54,7 +61,7 @@ app.post('/execute-order',checkIfAuthenticated,body('orderToken').notEmpty(),asy
 app.get('/cancel-order',(req,res)=>{
     res.send('cancelled');
 });
-
+*/
 app.listen(process.env.PORT,() => {
     console.log(`Server Running on port: http://localhost:${process.env.PORT}`);
 });
