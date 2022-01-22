@@ -1,7 +1,7 @@
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 dotenv.config();
-const credentials = require('../../alcancia-developers-firebase-adminsdk-htsct-98ded1e82e.json');
+const credentials = process.env.SERVICEKEY;
 
 admin.initializeApp({
     credential: admin.credential.cert(credentials)

@@ -1,15 +1,6 @@
 const { firestore, Timestamp, FieldValue } = require('firebase-admin');
 const admin = require('../middlewares/firebase.js');
 
-/*
-const serviceAccount = require('../../alcancia-developers-firebase-adminsdk-htsct-98ded1e82e.json');
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-});
-
-*/
-
 const db = firestore();
 
 async function getDesposits(req,res){
