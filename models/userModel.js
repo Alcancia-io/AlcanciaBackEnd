@@ -4,20 +4,14 @@ const admin = require('../middlewares/firebase.js');
 const db = firestore();
 
 async function getDesposits(req,res){
-    console.log(req.body.uid);
     try {
         let deposits = db.collection('users').doc(`${req.body.uid}`).collection('deposits');
-        
-        //const doc = await deposits.get();
         const snapshot = await deposits.get();
         let userDepostis=[];
         snapshot.forEach(doc => {
-            let depo={};
-            depo[`${doc.id}`] =doc.data();
-            userDepostis.push(depo);
+            userDepostis.push(doc.data());
         });
         let result = (JSON.stringify(userDepostis));
-        console.log(result);
         return res.status(200).send(result);
     }catch (e) {
         return res
@@ -55,7 +49,6 @@ async function addDeposit(req,order,res){
     }
     //register new payment
     try {
-        console.log(orderDetail.id);
         const userDetail = db.collection('users').doc(`${req.body.uid}`).collection('deposits');
         userDetail.doc(orderDetail.id).set({"create_time":order.create_time,
                                       "id":orderDetail.id,
@@ -66,7 +59,6 @@ async function addDeposit(req,order,res){
                                       "status":orderDetail.status,});
         await addPendingTransaction(req,orderDetail.id,order,res);
     }catch (e) {
-        console.log(e);
         return res
         .status(401)
         .send({ error: "Error while registering transaction" });

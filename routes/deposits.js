@@ -4,11 +4,6 @@ const {captureOrder,getOrderInfo} = require('../controllers/depositController.js
 const {addDeposit,getDesposits} = require('../models/userModel.js');
 const {checkAuth} = require('../middlewares/firebase.js');
 
-
-router.get('',async (req,res)=>{
-    console.log('hello');
-})
-
 router.post('/execute-order',checkAuth,async (req,res)=>{
     if(!req.body.orderToken){
         return res.status('422').send("Missing parameters");
@@ -25,7 +20,6 @@ router.post('/execute-order',checkAuth,async (req,res)=>{
 });
 
 router.get('/index',checkAuth,async (req, res) =>{
-    console.log('index');
     let deposits = await getDesposits(req,res);
     return deposits;
 });
