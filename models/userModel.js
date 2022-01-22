@@ -10,23 +10,19 @@ async function getDesposits(req,res){
         
         //const doc = await deposits.get();
         const snapshot = await deposits.get();
+        let userDepostis=[];
         snapshot.forEach(doc => {
-        console.log(doc.id, '=>', doc.data());
+            let depo={};
+            depo[`${doc.id}`] =doc.data();
+            userDepostis.push(depo);
         });
-        if (!doc.exists) {
-            return res
-            .status(404)
-            .send({ error: "No such documet" });
-        } else {
-            console.log(doc);
-            return res
-            .status(200)
-            .send(doc);
-        }
+        let result = (JSON.stringify(userDepostis));
+        console.log(result);
+        return res.status(200).send(result);
     }catch (e) {
         return res
         .status(500)
-        .send({ error: "Error while retriving user" });
+        .send({ error: "Error while retriving user"});
         
     }
 }
