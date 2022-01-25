@@ -3,7 +3,7 @@ const axios =  require('axios');
 async function getPaypalToken(){
   try {
     const { data: { access_token } } = await axios({
-      url: 'https://api.sandbox.paypal.com/v1/oauth2/token',
+      url: process.env.Paypal+'/v1/oauth2/token',
       method: 'post',
       headers: {
         Accept: 'application/json',
