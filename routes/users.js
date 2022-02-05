@@ -2,7 +2,7 @@ const express = require('express');
 const { param, header, validationResult } = require('express-validator');
 const router = express.Router();
 const { checkAuth } = require('../middlewares/firebase')
-const userController = require('../controllers/userCotroller.js');
+const userController = require('../controllers/userController.js');
 
 router.get(
     '/:uid',
@@ -33,5 +33,7 @@ router.get(
     checkAuth,
     userController.getUserDeposits
 );
+
+//router.post('/bulkUpdate',userController.bulkUpdate);
 
 module.exports = router;

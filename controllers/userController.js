@@ -35,6 +35,32 @@ module.exports = class UserController{
         let deposits = (JSON.stringify(userDepostis));
         return res.status(200).send(deposits);
     }
+
+    /*
+    static async bulkUpdate(req,res){
+        //create batch
+        console.log('Bulkupdate');
+        let batch = firestore().batch();
+        try{
+            let counter =0;
+            const usersSnapshot = await firestore().collection('users').get();
+            usersSnapshot.forEach(doc => {
+                if(doc.get('balance')==undefined){
+                    console.log("updating user: "+doc.data().userId);
+                    let  userRef = firestore().collection('users').doc(doc.data().userId);
+                    batch.update(userRef,{"balance": 0 });
+                    counter=counter+1;
+                }
+            });
+            batch.commit();
+            console.log("Done, updated "+counter+" user(s)");
+            return res.status(200).send({message:"Done, updated "+counter+" user(s)"});
+        }catch(e){
+            console.log(e);
+        }
+    }
+    */
+
 }
 
 /*
