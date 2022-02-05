@@ -1,35 +1,37 @@
-import { Account, CHAINS } from "@anchor-protocol/anchor-earn";
-import express from "express";
-import {checkIfAuthenticated} from '../auth.js';
-import {userCreate, userDetail} from '../firestoreClient.js';
-
+const express = require('express');
+const { param, header, validationResult } = require('express-validator');
 const router = express.Router();
+const { checkAuth } = require('../middlewares/firebase')
+const userController = require('../controllers/userCotroller.js');
 
-//CREATE
-router.post('/',checkIfAuthenticated, async (req, res) =>{
+router.get(
+    '/:uid',
+    header('Authorization').not().isEmpty(),
+    param('uid').not().isEmpty(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        return next();
+    },
+    checkAuth,
+    userController.getUser
+);
     
-    const user = req;
-    const account = new Account(CHAINS.TERRA);
-    user.body.accAddress = account.accAddress;
-    user.body.publicKey = account.publicKey;
-    user.body.privateKey = account.privateKey;
-    user.body.mnemonic = account.mnemonic;
-    res=userCreate(user.body,res);
-    return res;
-});
+router.get(
+    '/:uid/deposits',
+    header('Authorization').not().isEmpty(),
+    param('uid').not().isEmpty(),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
+        return next();
+    },
+    checkAuth,
+    userController.getUserDeposits
+);
 
-//GET DETAIL
-
-router.get('/',checkIfAuthenticated, async (req, res) =>{
-    
-    const user = req;
-    res=userDetail(user.body,res);
-    return res;
-});
-
-//PATCH
-
-
-//DELETE
-
-export default router;
+module.exports = router;
