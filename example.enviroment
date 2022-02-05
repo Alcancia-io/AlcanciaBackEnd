@@ -1,0 +1,7 @@
+PORT='8000'
+SERVICEKEY='path to service key'
+Client='paypal_client'
+Secret='paypal_secret'
+Paypal='https://api-m.sandbox.paypal.com'
+#Paypal='https://api-m.paypal.com'
+Host='host_base_url'
