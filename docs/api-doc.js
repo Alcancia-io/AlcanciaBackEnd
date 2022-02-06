@@ -19,6 +19,10 @@ module.exports = {
       {
         "url": "http://127.0.0.1:8000/",
         "description": "AlcanciaBackendLocal"
+      },
+      {
+        "url": "https://2a95-2806-2f0-6060-509-22ed-7127-368a-2a16.ngrok.io",
+        "description": "ngrok"
       }
     ],
     "tags": [
