@@ -12,7 +12,7 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerdoc = require('./docs/api-doc');
 
-const csrfMiddleware = csrf({ cookie: true });
+//const csrfMiddleware = csrf({ cookie: true });
 dotenv.config();
 
 //app init
@@ -24,8 +24,8 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use(cors());
 app.use(bodyParser.json());
 app.use(express.json());
-app.use(cookieParser());
-app.use(csrfMiddleware);
+//app.use(cookieParser());
+//app.use(csrfMiddleware);
 app.use('/api/users',users);
 //app.use('/api/login',login);
 app.use('/api/deposits',deposits);
