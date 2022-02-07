@@ -34,6 +34,20 @@ router.get(
     userController.getUserDeposits
 );
 
+router.put(
+  '/',
+  header('Authorization').not().isEmpty(),
+  (req, res, next) => {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+      return next();
+  },
+  checkAuth,
+  userController.updateUser
+);
+
 //router.post('/bulkUpdate',userController.bulkUpdate);
 
 module.exports = router;

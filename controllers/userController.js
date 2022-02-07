@@ -43,7 +43,17 @@ module.exports = class UserController{
     }
 
     static async updateUser(req,res,next){
-
+        try {
+            firestore().collection('users').doc(req.body.uid).update({
+                "name":req.body.name,
+                "surname":req.body.surname
+            });
+            console.log("User updated");
+            return res.status(200).send({"message":"ok"});
+        }catch (e) {
+            console.log(e);
+        }
+        return res.status(404).send({message:"error while updating user"});
     }
 
     static async deleteUser(req,res,next){
