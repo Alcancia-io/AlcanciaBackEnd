@@ -46,7 +46,7 @@ async function addDeposit(req,order,res){
     }
     //update current balance
     try{
-         await db.collection('users').doc(`${req.body.uid}`).update({"balance":balance+parseInt(orderDetail.seller_receivable_breakdown.net_amount.value)});
+         await db.collection('users').doc(`${req.body.uid}`).update({"balance":balance+parseInt(orderDetail.seller_receivable_breakdown.gross_amount.value)});
     }catch(e){
         return res
         .status(401)
