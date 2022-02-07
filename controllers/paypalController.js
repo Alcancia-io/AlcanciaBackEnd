@@ -32,10 +32,11 @@ module.exports = class PaypalController{
   }
 
   static async captureOrder(req,res){
+    let response;
     try {
       const request = new paypal.orders.OrdersCaptureRequest(req.body.orderToken);
       request.requestBody({});
-      const response = await payPalClient.client().execute(request);
+      response = await payPalClient.client().execute(request);
       if (true){
           console.log("Status Code: " + response.statusCode);
           console.log("Status: " + response.result.status);
@@ -60,6 +61,10 @@ module.exports = class PaypalController{
       return response.result;
     }catch(e){
       console.log(e)
+      if(response.statusCode!=201){
+        console.log(response.statusCode);
+        res.status(500).send({"erro":"error en trans"});
+      }
     }
   }
 
