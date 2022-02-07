@@ -26,6 +26,7 @@ async function addDeposit(req,order,res){
     let orderDetail = order.purchase_units[0].payments.captures[0];
     //Read current balance
     let balance = 0;
+    let user;
     try {
         console.log(req.body.uid)
         const userdetail = db.collection('users').doc(`${req.body.uid}`);
@@ -34,9 +35,10 @@ async function addDeposit(req,order,res){
         if (!doc.exists) {
             console.log('No such document!');
         } else {
-            console.log(doc.data())
+            //console.log(doc.data())
+            user = doc.data();
             balance = parseInt(doc.data().balance);
-            console.log(balance)
+            //console.log(balance)
         }
         
     }catch (e) {
@@ -66,7 +68,7 @@ async function addDeposit(req,order,res){
                                       "payapal_fee":orderDetail.seller_receivable_breakdown.paypal_fee.value,
                                       "status":orderDetail.status,});
                                       console.log('after');
-                                      await addPendingTransaction(req,orderDetail.id,order,res);
+                                      await addPendingTransaction(req,orderDetail.id,order,user,res);
     }catch (e) {
         return res
         .status(401)
@@ -81,7 +83,7 @@ async function addDeposit(req,order,res){
 };
 
 
-async function addPendingTransaction(req,orderId,order,res){
+async function addPendingTransaction(req,orderId,order,user,res){
     try {
         const pendingTransaction = db.collection('pendingTransactions')
         console.log(order);
@@ -89,7 +91,7 @@ async function addPendingTransaction(req,orderId,order,res){
             "id":orderId,
             "date":order.purchase_units[0].payments.captures[0].create_time,
             "UID":req.body.uid,
-            "name":db.collection('users').doc(`${req.body.uid}`).name+db.collection('users').doc(`${req.body.uid}`).lastName,
+            "name":user.name,
             "payer":order.payer,
             "amount":order.purchase_units[0].payments.captures[0].amount.value,
             "target Asset":"USDT",
