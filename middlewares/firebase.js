@@ -23,6 +23,7 @@ async function checkAuth(req, res, next){
     try{
         let userInfo = await admin.auth().verifyIdToken(token);
         req.body.uid = userInfo.uid;
+        req.body.email = userInfo.email
         return next();
     }catch(e){
         res.status(401).send({ message: "Could not authorize" });

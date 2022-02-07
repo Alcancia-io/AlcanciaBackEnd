@@ -12,6 +12,23 @@ module.exports = class UserController{
                                 .doc(req.params.uid)
                                 .get();
             if(!snapshot.exists){
+                try {
+                    firestore().collection('users').doc(req.body.uid).set({
+                        "balance":0,
+                        "createdAt":Date.now(),
+                        "email":req.body.email,
+                        "name":"",
+                        "userId":req.body.uid
+                    });
+                    console.log("User created");
+                    let snapshot1 = await firestore()
+                                .collection('users')
+                                .doc(req.params.uid)
+                                .get();
+                    return res.status(200).send(snapshot.data());
+                }catch (e) {
+                    console.log(e);
+                }
                 return res.status(404).send({message:"No such document"});
             }
             let user = snapshot.data();
