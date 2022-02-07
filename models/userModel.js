@@ -1,7 +1,8 @@
-const { firestore, Timestamp, FieldValue } = require('firebase-admin');
 const admin = require('../middlewares/firebase.js');
+const { firestore } = require('firebase-admin');
 
 const db = firestore();
+
 
 async function getDesposits(req,res){
     try {
@@ -26,18 +27,22 @@ async function addDeposit(req,order,res){
     //Read current balance
     let balance = 0;
     try {
+        console.log(req.body.uid)
         const userdetail = db.collection('users').doc(`${req.body.uid}`);
         const doc = await userdetail.get();
+        console.log(req.body.uid)
         if (!doc.exists) {
             console.log('No such document!');
         } else {
+            console.log(doc.data())
             balance = parseInt(doc.data().balance);
+            console.log(balance)
         }
         
     }catch (e) {
         return res
         .status(401)
-        .send({ error: "Error while retriving user" });
+        .send({ error: e });
     }
     //update current balance
     try{
@@ -48,16 +53,20 @@ async function addDeposit(req,order,res){
         .send({ error: "Error while updating user balance" });
     }
     //register new payment
+    
     try {
+        console.log('before regis');
         const userDetail = db.collection('users').doc(`${req.body.uid}`).collection('deposits');
-        userDetail.doc(orderDetail.id).set({"create_time":order.create_time,
+        userDetail.doc(orderDetail.id).set({"create_time":orderDetail.create_time,
                                       "id":orderDetail.id,
                                       "payer":order.payer,
+                                      "paypal_id":order.id,
                                       "gross_amount":orderDetail.seller_receivable_breakdown.gross_amount.value,
                                       "net_amount":orderDetail.seller_receivable_breakdown.net_amount.value,
                                       "payapal_fee":orderDetail.seller_receivable_breakdown.paypal_fee.value,
                                       "status":orderDetail.status,});
-        await addPendingTransaction(req,orderDetail.id,order,res);
+                                      console.log('after');
+                                      await addPendingTransaction(req,orderDetail.id,order,res);
     }catch (e) {
         return res
         .status(401)
@@ -65,24 +74,24 @@ async function addDeposit(req,order,res){
     }
     return res
         .status(200)
-        .send({"create_time":order.create_time,
+        .send({"create_time":orderDetail.create_time,
         "id":orderDetail.id,
         "payer":order.payer,
-        "gross_amount":orderDetail.seller_receivable_breakdown.gross_amount.value,
-        "net_amount":orderDetail.seller_receivable_breakdown.net_amount.value,
-        "payapal_fee":orderDetail.seller_receivable_breakdown.paypal_fee.value});
+        "gross_amount":orderDetail.seller_receivable_breakdown.gross_amount.value,});
 };
 
 
 async function addPendingTransaction(req,orderId,order,res){
     try {
         const pendingTransaction = db.collection('pendingTransactions')
+        console.log(order);
         pendingTransaction.doc(orderId).set({
-            "date":order.create_time,
+            "id":orderId,
+            "date":order.purchase_units[0].payments.captures[0].create_time,
             "UID":req.body.uid,
             "name":db.collection('users').doc(`${req.body.uid}`).name+db.collection('users').doc(`${req.body.uid}`).lastName,
             "payer":order.payer,
-            "amount":order.purchase_units[0].amount.value,
+            "amount":order.purchase_units[0].payments.captures[0].amount.value,
             "target Asset":"USDT",
             "status":"pending",
             "teller":"",
