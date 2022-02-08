@@ -37,7 +37,7 @@ async function addDeposit(req,order,res){
         } else {
             //console.log(doc.data())
             user = doc.data();
-            balance = parseInt(doc.data().balance);
+            balance = parseFloat(doc.data().balance);
             //console.log(balance)
         }
         
@@ -48,7 +48,7 @@ async function addDeposit(req,order,res){
     }
     //update current balance
     try{
-         await db.collection('users').doc(`${req.body.uid}`).update({"balance":balance+parseInt(orderDetail.seller_receivable_breakdown.gross_amount.value)});
+         await db.collection('users').doc(`${req.body.uid}`).update({"balance":balance+parseFloat(orderDetail.seller_receivable_breakdown.gross_amount.value)});
     }catch(e){
         return res
         .status(401)
