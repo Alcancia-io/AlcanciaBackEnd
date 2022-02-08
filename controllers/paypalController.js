@@ -60,11 +60,10 @@ module.exports = class PaypalController{
       }
       return response.result;
     }catch(e){
-      console.log(e)
-      if(response.statusCode!=201){
-        console.log(response.statusCode);
-        res.status(500).send({"erro":"error en trans"});
-      }
+      let message = JSON.parse(e.message);
+      console.log(e.statusCode);
+      return res.status(e.statusCode).send({error:message.name,
+                                        detail:message.detail[0].issue});
     }
   }
 
