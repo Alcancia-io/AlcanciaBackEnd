@@ -63,7 +63,8 @@ module.exports = class PaypalController{
       let message = JSON.parse(e.message);
       console.log(e.statusCode);
       return res.status(e.statusCode).send({error:message.name,
-                                        detail:message.detail[0].issue});
+                                        detail:message.details[0].issue,
+                                      description:message.details[0].description});
     }
   }
 
