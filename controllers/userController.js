@@ -1,6 +1,8 @@
 const { firestore } = require('firebase-admin');
 const userModel = require('../models/user.js');
 
+const milliPerDay = 8.64e+7;
+const interestRatePerDay = .15/365
 
 module.exports = class UserController{
     
@@ -33,6 +35,40 @@ module.exports = class UserController{
             }
             let user = snapshot.data();
             return res.status(200).send(user);
+        }catch(e){
+            return res.status(500).send({message:"Something went wrong"});
+        }
+    }
+
+    static async getUserBalance(req,res){
+        try{
+            let snapshot = await firestore()
+                                .collection('users')
+                                .doc(req.params.uid)
+                                .get();
+            if(!snapshot.exists){
+                return res.status(404).send({message:"No such document"});
+            }
+            let user = snapshot.data();
+            let lastDateUpdatedBalance = Date.UTC(user.lastDateUpdatedBalance.toDate().getFullYear(),
+                                                user.lastDateUpdatedBalance.toDate().getMonth()+1,
+                                                user.lastDateUpdatedBalance.toDate().getDate());
+            let todayDate = new Date();
+            let today = Date.UTC(todayDate.getFullYear(),
+                                todayDate.getMonth()+1,
+                                todayDate.getDate());
+            if(lastDateUpdatedBalance != today){
+                let deltaTime=(today-lastDateUpdatedBalance)/milliPerDay;
+                console.log(deltaTime);
+                user.balance = parseFloat(user.balance+(deltaTime*user.balance*interestRatePerDay)).toFixed(2);
+                firestore().
+                        collection('users').
+                        doc(req.params.uid).
+                        update({
+                                "lastDateUpdatedBalance": firestore.Timestamp.now(),
+                                "balance":user.balance});
+            }
+            return res.status(200).send(user.balance);
         }catch(e){
             return res.status(500).send({message:"Something went wrong"});
         }
