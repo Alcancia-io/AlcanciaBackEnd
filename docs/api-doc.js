@@ -172,7 +172,7 @@ module.exports = {
                       },
                       "timestamp": {
                         "type": "string",
-                        "example":"022-01-24T20:38:37Z"
+                        "example":"2022-02-17T20:41:06.527Z"
                       }
                     }
                   }

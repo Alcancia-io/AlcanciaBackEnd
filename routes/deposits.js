@@ -53,6 +53,7 @@ router.post(
     return orderDetails;
     */
     //missing check body
+    
     header('Authorization').not().isEmpty(),
     body('orderToken').not().isEmpty(),
     (req, res, next) => {
@@ -66,11 +67,6 @@ router.post(
     async (req,res) =>{
         let order = await paypalController.captureOrder(req,res);
         let deposit = await addDeposit(req,order,res);
-        /*
-        return res.status(201).send({"id": order.purchase_units[0].payments.captures[0].id,
-                                    "payer": order.payer,
-                                    "gross amount": order.purchase_units[0].payments.captures[0].gross_amount,
-                                    "created time": order.purchase_units[0].payments.captures[0].create_time})*/
     }
 );
 module.exports = router;
