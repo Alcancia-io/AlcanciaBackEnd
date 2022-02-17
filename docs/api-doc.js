@@ -136,6 +136,65 @@ module.exports = {
             }
           ]
         }
+      },
+      "/api/users/{uid}/balance": {
+        "get": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Returns the updated user balance and a timestamp.",
+          "description": "This endpoint calculates the user balance fixed to 2 decimals, updating the user collection {balance & lastDateUpdatedBalace}",
+          "parameters": [
+            {
+              "name": "uid",
+              "in": "path",
+              "description": "The ID of the user to query.",
+              "required": true,
+              "style": "simple",
+              "explode": false,
+              "schema": {
+                "type": "string",
+                "example": "wzjhbbxemra4goFJQfih2uoNKnw2"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "balance": {
+                        "type": "number",
+                        "example": 300.45
+                      },
+                      "timestamp": {
+                        "type": "string",
+                        "example":"022-01-24T20:38:37Z"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized."
+            },
+            "403": {
+              "description": "Forbidden"
+            },
+            "404": {
+              "description": "No user info"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
       }
     },
     "components": {
