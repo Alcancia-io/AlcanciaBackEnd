@@ -21,7 +21,6 @@ router.get(
 
 router.get(
   '/:uid/balance',
-  /*
   header('Authorization').not().isEmpty(),
   param('uid').not().isEmpty(),
   (req, res, next) => {
@@ -31,7 +30,7 @@ router.get(
       }
       return next();
   },
-  checkAuth,*/
+  checkAuth,
   userController.getUserBalance
 );
     

@@ -59,8 +59,8 @@ module.exports = class UserController{
                                 todayDate.getDate());
             if(lastDateUpdatedBalance != today){
                 let deltaTime=(today-lastDateUpdatedBalance)/milliPerDay;
-                console.log(deltaTime);
-                user.balance = parseFloat(user.balance+(deltaTime*user.balance*interestRatePerDay)).toFixed(2);
+                //saldoActual * euler^((0.15/365)*deltaTime)
+                user.balance = Math.round((parseFloat(user.balance)*Math.exp((interestRatePerDay)*deltaTime))* 100) / 100;
                 firestore().
                         collection('users').
                         doc(req.params.uid).
@@ -68,7 +68,8 @@ module.exports = class UserController{
                                 "lastDateUpdatedBalance": firestore.Timestamp.now(),
                                 "balance":user.balance});
             }
-            return res.status(200).send(user.balance);
+            return res.status(200).send({balance:user.balance,
+                                        lastUpdate:todayDate});
         }catch(e){
             return res.status(500).send({message:"Something went wrong"});
         }
