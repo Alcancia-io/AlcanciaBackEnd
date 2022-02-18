@@ -140,7 +140,7 @@ module.exports = class UserController{
         }
     }
     */
-   /*
+    /*
     static async bulkUpdate(req,res){
         //create batch
         console.log('Bulkupdate');
@@ -149,10 +149,10 @@ module.exports = class UserController{
             let counter = 0;
             const usersSnapshot = await firestore().collection('users').get();
             usersSnapshot.forEach(doc => {
-                if(doc.get('balance')==undefined){
+                if(doc.get('lastDateUpdatedBalance')==undefined){
                     console.log("updating user: "+doc.data().userId);
                     let  userRef = firestore().collection('users').doc(doc.data().userId);
-                    batch.update(userRef,{"balance": 0 });
+                    batch.update(userRef,{"lastDateUpdatedBalance": firestore.Timestamp.now() });
                     counter=counter+1;
                 }
             });
@@ -162,7 +162,9 @@ module.exports = class UserController{
         }catch(e){
             console.log(e);
         }
-    }*/
+    }
+    */
+    
 }
 
 /*
