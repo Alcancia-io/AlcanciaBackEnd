@@ -195,9 +195,132 @@ module.exports = {
             }
           ]
         }
-      }
+      },
+      "/api/withdraws": {
+        "post": {
+          "tags": [
+            "withdraws"
+          ],
+          "parameters":[
+              {"$ref": "#/components/parameters/amount"},
+              {"$ref": "#/components/parameters/country"},
+              {"$ref": "#/components/parameters/account"},
+              {"$ref": "#/components/parameters/beneficiary"},
+            ]
+          ,
+          "summary": "Create a new withdraw order",
+          "description": "This endpoint creates a new withdraw order to be process",
+          "responses": {
+            "200": {
+              "description": "OK",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "UID": {
+                        "type": "string",
+                        "example": "wzjhbbxemra4goFJQfih2uoNKnw2",
+                        "description":"user uid"
+                      },
+                      "UUID": {
+                        "type": "string",
+                        "example": "88368f2a-d5db-47d8-a05f-534fab0a0045",
+                        "description": "unic transaction identifier"
+                      },
+                      "cratedAt": {
+                        "type": "string",
+                        "example":"2022-02-17T20:41:06.527Z"
+                      },
+                      "promisedDay": {
+                        "type": "string",
+                        "example":"2022-02-17T20:41:06.527Z"
+                      },
+                      "status": {
+                        "type": "string",
+                        "example": "pending"
+                      },
+                      "details": {
+                        "type": "object",
+                        "properties": {
+                          "amount": {
+                            "type": "number",
+                            "example": 20
+                          },
+                          "oldBalance": {
+                            "type": "number",
+                            "example": 100
+                          },
+                          "newBalance": {
+                            "type": "number",
+                            "example": 80
+                          },
+                        }  
+                      },    
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized."
+            },
+            "403": {
+              "description": "Forbidden"
+            },
+            "404": {
+              "description": "No user info"
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
     },
     "components": {
+      "parameters": {
+        "amount": {
+          "in":["body"],
+          "name": "amount",
+          "required": "true",
+          "schema": {
+            "type": "number",
+            "min": 20,
+            "max": 300,
+            "example": 250.32 
+          }
+        },
+        "country": {
+          "in":["body"],
+          "name": "country",
+          "required": "true",
+          "schema": {
+            "type": "string",
+            "example": "MEX"
+          }
+        },
+        "beneficiary": {
+          "in":["body"],
+          "name": "beneficiary",
+          "required": "true",
+          "schema": {
+            "type": "string",
+            "example": "Royer Donnet Arenas"
+          }
+        },
+        "account": {
+          "in":["body"],
+          "name": "account",
+          "required": "true",
+          "schema": {
+            "type": "string",
+            "example": "5512-4321-4353-4321"
+          }
+        },
+      },
       "schemas": {
         "deposits": {
           "type": "object",
@@ -252,7 +375,7 @@ module.exports = {
             },
             "email": {
               "type": "string",
-              "example": "juandi@buidlcapital.xyz"
+              "example": "juandi@buildcapital.xyz"
             },
             "balance": {
               "type": "number",
@@ -298,6 +421,6 @@ module.exports = {
     },
     
   },
-  
+
   "apis":['./routes/*.js'],
 }
