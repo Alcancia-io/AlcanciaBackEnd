@@ -60,7 +60,7 @@ module.exports = class UserController{
             if(lastDateUpdatedBalance != today){
                 let deltaTime=(today-lastDateUpdatedBalance)/milliPerDay;
                 //saldoActual * euler^((0.15/365)*deltaTime)
-                user.balance = Math.round((parseFloat(user.balance)*Math.exp((interestRatePerDay)*deltaTime))* 100) / 100;
+                user.balance = Math.round((parseFloat(user.balance)*Math.exp((interestRatePerDay)*deltaTime))* 1000) / 1000;
                 firestore().
                         collection('users').
                         doc(req.params.uid).

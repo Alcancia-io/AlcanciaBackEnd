@@ -48,7 +48,7 @@ async function addDeposit(req,order,res){
     }
     //update current balance
     try{
-         balance = Math.round((balance+parseFloat(orderDetail.seller_receivable_breakdown.gross_amount.value))*100)/100;
+         balance = Math.round((balance+parseFloat(orderDetail.seller_receivable_breakdown.gross_amount.value))*1000)/1000;
          await db.collection('users').doc(`${req.body.uid}`).update({"balance":balance,
                                                                     "lastDateUpdatedBalance":firestore.Timestamp.now()});
     }catch(e){
