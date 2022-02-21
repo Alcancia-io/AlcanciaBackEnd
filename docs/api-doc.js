@@ -9,10 +9,6 @@ module.exports = {
     },
     "servers": [
       {
-        "url": "https://virtserver.swaggerhub.com/royers/Alcancia/1.0",
-        "description": "AlcanciaBackend"
-      },
-      {
         "url": "https://royerdonnetarenas.tech/",
         "description": "AlcanciaBackend"
       },
@@ -20,10 +16,6 @@ module.exports = {
         "url": "http://127.0.0.1:8000/",
         "description": "AlcanciaBackendLocal"
       },
-      {
-        "url": "https://2a95-2806-2f0-6060-509-22ed-7127-368a-2a16.ngrok.io",
-        "description": "ngrok"
-      }
     ],
     "tags": [
       {
@@ -206,6 +198,8 @@ module.exports = {
               {"$ref": "#/components/parameters/country"},
               {"$ref": "#/components/parameters/account"},
               {"$ref": "#/components/parameters/beneficiary"},
+              {"$ref": "#/components/parameters/bank"},
+              {"$ref": "#/components/parameters/cedula"},
             ]
           ,
           "summary": "Create a new withdraw order",
@@ -318,6 +312,25 @@ module.exports = {
           "schema": {
             "type": "string",
             "example": "5512-4321-4353-4321"
+            //9,11,18,20
+          }
+        },
+        "bank": {
+          "in":["body"],
+          "name": "bank",
+          "required": "true",
+          "schema": {
+            "type": "string",
+            "example": "Santander"
+          }
+        },
+        "cedula": {
+          "in":["body"],
+          "name": "cedula",
+          "schema": {
+            "type": "string",
+            "example": "12345678910"
+            //11
           }
         },
       },
