@@ -8,6 +8,7 @@ const validator = require('express-validator');
 const deposits = require('./routes/deposits.js');
 const users = require('./routes/users.js');
 const login = require('./routes/login.js');
+const withdraws = require('./routes/withdraws.js');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerdoc = require('./docs/api-doc');
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use('/api/users',users);
 //app.use('/api/login',login);
 app.use('/api/deposits',deposits);
+app.use('/api/withdraws',withdraws);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 /*
