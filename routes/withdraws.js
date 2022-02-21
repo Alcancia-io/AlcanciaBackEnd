@@ -5,7 +5,19 @@ const {checkAuth} = require('../middlewares/firebase.js');
 const withdrawController = require('../controllers/withdrawCotroller.js');
 
 router.post('/',
-            //checkAuth,
+            header('Authorization').not().isEmpty(),
+            body('amount').not().isEmpty(),
+            body('country').not().isEmpty(),
+            body('account').not().isEmpty(),
+            body('bank').not().isEmpty(),
+            (req, res, next) => {
+                const errors = validationResult(req);
+                if (!errors.isEmpty()) {
+                  return res.status(400).json({ errors: errors.array() });
+                }
+                return next();
+            },
+            checkAuth,
             withdrawController.doWithdraw
 );
 
