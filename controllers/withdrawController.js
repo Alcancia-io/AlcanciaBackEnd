@@ -11,23 +11,24 @@ module.exports = class WithdrawController{
                 break;
         }*/
         //check current balance
-        console.log(12);
         let user = await firestore().collection('users').doc(req.body.uid).get();
         user = user.data();
         if(req.body.amount>user.balance){
             return -1;
         }
+        let newBalance = Math.round((user.balance-req.body.amount)*1000)/1000;
         //create pending trans
-        let UUID= uuidv4();
+        let firestoreToday = firestore.Timestamp.now();
+        let promisedDay =  firestoreToday.toDate().getDay+3
         await firestore().
                 collection('pendingTransactions').
-                doc(UUID).
+                doc().
                 set({
                     "type":"withdraw",
                     "UID": req.body.uid,
-                    "UUID": UUID,
-                    "cratedAt": firestore.Timestamp.now(),
-                    "promisedDay": firestore.Timestamp.now()+3,
+                    //"UUID": UUID,
+                    "cratedAt": firestoreToday,
+                    "promisedDay": promisedDay,
                     "status": "pending",
                     "details": {
                         "amount": req.body.amount,
@@ -35,38 +36,42 @@ module.exports = class WithdrawController{
                         "bank":req.body.bank,
                         "Account":req.body.account,
                         "oldBalance": user.balance,
-                        "newBalance": user.balance-req.body.amount,
+                        "newBalance": newBalance,
                     }
 
                 });
-                console.log(1);
         //create userTrans
-        await firestore().collection('users').doc(req.body.uid).collection('withdraws').doc(UUID).set({
-                    "UID": req.body.uid,
-                    "UUID": UUID,
-                    "cratedAt": firestore.Timestamp.now(),
-                    //"promisedDay": firestore.Timestamp.now()+3,
+        await firestore().
+                collection('users').
+                doc(req.body.uid).
+                collection('withdraws').
+                add({
+                    "userId": req.body.uid,
+                    //"uuid": UUID,
+                    "cratedAt": firestoreToday,
+                    "promisedDay": promisedDay,
                     "status": "pending",
                     "details": {
                         "amount": req.body.amount,
                         "oldBalance": user.balance,
-                        "newBalance": user.balance-req.body.amount,
+                        "newBalance": newBalance,
                     }
         });
-        console.log(2);
         //subs amount from balance
-        await firestore().collection('users').doc(req.body.uid).update({"balance":user.balance-req.body.amount,
-                                                                        "lastDateUpdatedBalance":firestore.Timestamp.now()});
-console.log(3);
+        await firestore().
+                collection('users').
+                doc(req.body.uid).
+                update({"balance":newBalance,
+                "lastDateUpdatedBalance":firestoreToday});
         return res.status(201).send({"UID": req.body.uid,
-                            "UUID": UUID,
-                            "cratedAt": firestore.Timestamp.now(),
-                            //"promisedDay": firestore.Timestamp.now()+3,
+                            //"UUID": UUID,
+                            "cratedAt": firestoreToday,
+                            "promisedDay": promisedDay,
                             "status": "pending",
                             "details": {
                                 "amount": req.body.amount,
                                 "oldBalance": user.balance,
-                                "newBalance": user.balance-req.body.amount,
+                                "newBalance": newBalance,
                             }
                              });
     }
