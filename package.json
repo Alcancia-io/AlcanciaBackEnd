@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "dev": "nodemon index.js",
-    "deploy": "sudo pm2 start index.js"
+    "deploy": "sudo pm2 start index.js",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",

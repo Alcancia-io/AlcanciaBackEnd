@@ -1,4 +1,5 @@
 const { firestore } = require('firebase-admin');
+const { admin } = require('../middlewares/firebase.js');
 const userModel = require('../models/user.js');
 
 const milliPerDay = 8.64e+7;
@@ -41,14 +42,15 @@ module.exports = class UserController{
     }
 
     static async getUserBalance(req,res){
+        let snapshot = await admin.firestore()
+            .collection('users')
+            .doc(req.params.uid)
+            .get();
+        if(!snapshot.exists){
+            return res.status(404).send({message:"No such document"});
+        }
         try{
-            let snapshot = await firestore()
-                                .collection('users')
-                                .doc(req.params.uid)
-                                .get();
-            if(!snapshot.exists){
-                return res.status(404).send({message:"No such document"});
-            }
+            
             let user = snapshot.data();
             let lastDateUpdatedBalance = Date.UTC(user.lastDateUpdatedBalance.toDate().getFullYear(),
                                                 user.lastDateUpdatedBalance.toDate().getMonth()+1,
@@ -61,15 +63,15 @@ module.exports = class UserController{
                 let deltaTime=(today-lastDateUpdatedBalance)/milliPerDay;
                 //saldoActual * euler^((0.15/365)*deltaTime)
                 user.balance = Math.round((parseFloat(user.balance)*Math.exp((interestRatePerDay)*deltaTime))* 1000) / 1000;
-                firestore().
+                admin.firestore().
                         collection('users').
                         doc(req.params.uid).
                         update({
-                                "lastDateUpdatedBalance": firestore.Timestamp.now(),
+                                "lastDateUpdatedBalance": admin.firestore.Timestamp.now(),
                                 "balance":user.balance});
             }
             return res.status(200).send({balance:user.balance,
-                                        lastUpdate:todayDate});
+                                        lastUpdate:today});
         }catch(e){
             return res.status(500).send({message:"Something went wrong"});
         }

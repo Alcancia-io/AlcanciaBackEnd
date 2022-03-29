@@ -1,9 +1,11 @@
 const admin = require('firebase-admin');
+//const { initializeApp } = require('firebase-admin/app');
 const dotenv = require('dotenv');
 dotenv.config();
 const credentials = process.env.SERVICEKEY;
 
 admin.initializeApp({
+    //credential: applicationDefault()
     credential: admin.credential.cert(credentials)
 });
 
@@ -30,3 +32,4 @@ async function checkAuth(req, res, next){
     };
 };
 exports.checkAuth = checkAuth;
+exports.admin = admin
